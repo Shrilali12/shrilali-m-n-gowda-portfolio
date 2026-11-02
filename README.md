@@ -2,7 +2,7 @@
 
 A single-page developer portfolio showcasing full-stack projects, skills, and experience built with React 19, Vite, and Tailwind CSS 4.
 
-**Live site:** https://YOUR-SITE-URL/ _(replace after deployment)_
+**Live site:** https://shrilali-m-n-gowda-portfolio.vercel.app
 
 ---
 
