@@ -1,87 +1,98 @@
 // App.jsx — root component
-// Composes all sections in order and initialises AOS scroll animations.
-import { useState, useEffect } from 'react'
-import { AnimatePresence } from 'framer-motion'
+// Renders all sections in the correct order.
+// Preloader is self-contained (manages its own timer + exit animation).
+// AOS is initialised once here; individual sections add data-aos attributes.
+
+import { useEffect } from 'react'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
-// ── Layout ───────────────────────────────────────────────────
-import Preloader  from './components/Preloader'
-import Navbar     from './components/Navbar'
-import Footer     from './components/Footer'
+// ── Layout ────────────────────────────────────────────────────
+import Preloader      from './components/Preloader'        // self-contained, no props
+import Navbar         from './components/Navbar'
+import Footer         from './components/Footer'
 
-// ── Sections ─────────────────────────────────────────────────
-import Hero       from './components/Hero'
-import About      from './components/About'
-import Process    from './components/Process'
-import Skills     from './components/Skills'
-import Projects   from './components/Projects'
-import Experience from './components/Experience'
-import SoftSkills from './components/SoftSkills'
-import Leadership from './components/Leadership'
-import Contact    from './components/Contact'
+// ── Sections (in page order) ──────────────────────────────────
+import Hero           from './components/Hero'             // #home
+import About          from './components/About'            // #about
+import TechnicalSkills from './components/TechnicalSkills' // #skills
+import Services       from './components/Services'         // #process (scroll-path)
+import Projects       from './components/Projects'         // #projects
+import Internships    from './components/Internships'      // work experience
+import Leadership     from './components/Leadership'       // activities timeline
+import SoftSkills     from './components/SoftSkills'       // white cards
+import Contact        from './components/Contact'          // #contact
+
+// ── Scroll-reveal wrapper ─────────────────────────────────────
+import ScrollReveal   from './components/ScrollReveal'
 
 export default function App() {
-  // Show the preloader until it signals completion
-  const [showPreloader, setShowPreloader] = useState(true)
-
-  // Initialise AOS once the preloader is gone
+  // Initialise AOS once on mount
   useEffect(() => {
-    if (!showPreloader) {
-      AOS.init({
-        duration: 700,   // ms per animation
-        once: true,      // animate each element only once
-        offset: 80,      // px from bottom of viewport before triggering
-      })
-    }
-  }, [showPreloader])
+    AOS.init({
+      duration: 700,
+      once: true,   // each element animates in once; ScrollReveal handles re-play
+      offset: 80,
+    })
+  }, [])
 
   return (
     <>
-      {/* Preloader — AnimatePresence handles the exit animation */}
-      <AnimatePresence>
-        {showPreloader && (
-          <Preloader onComplete={() => setShowPreloader(false)} />
-        )}
-      </AnimatePresence>
+      {/*
+        Preloader sits at z-[100000] fixed — overlays the whole page.
+        It fades/slides out after ~2.2 s on its own.
+      */}
+      <Preloader />
 
-      {/* Main site — rendered beneath the preloader so AOS is ready */}
-      {!showPreloader && (
-        <div className="min-h-screen bg-black text-white">
-          <Navbar />
+      {/* Navbar is sticky; always rendered beneath the preloader */}
+      <Navbar />
 
-          <main>
-            {/* ── #home ── */}
-            <Hero />
+      <main>
+        {/* Hero — has its own AOS.init + staggered entrance, no ScrollReveal wrapper */}
+        <Hero />
 
-            {/* ── #about ── */}
-            <About />
+        {/* Every section below gets a fade+slide-up on scroll */}
+        <ScrollReveal>
+          <About />
+        </ScrollReveal>
 
-            {/* ── #process ── How I Work */}
-            <Process />
+        {/* TechnicalSkills — #skills */}
+        <ScrollReveal delay={0.05}>
+          <TechnicalSkills />
+        </ScrollReveal>
 
-            {/* ── #skills ── Technical Skills */}
-            <Skills />
+        {/* Services — #process (scroll-driven path animation) */}
+        <ScrollReveal delay={0.05}>
+          <Services />
+        </ScrollReveal>
 
-            {/* ── #projects ── */}
-            <Projects />
+        {/* Projects — #projects */}
+        <ScrollReveal delay={0.05}>
+          <Projects />
+        </ScrollReveal>
 
-            {/* ── Experience / Internships ── */}
-            <Experience />
+        {/* Internships — bold red section */}
+        <ScrollReveal delay={0.05}>
+          <Internships />
+        </ScrollReveal>
 
-            {/* ── Soft Skills ── */}
-            <SoftSkills />
+        {/* Leadership — dark section with vertical timeline */}
+        <ScrollReveal delay={0.05}>
+          <Leadership />
+        </ScrollReveal>
 
-            {/* ── Activities & Leadership ── */}
-            <Leadership />
+        {/* SoftSkills — white section with light cards */}
+        <ScrollReveal delay={0.05}>
+          <SoftSkills />
+        </ScrollReveal>
 
-            {/* ── #contact ── */}
-            <Contact />
-          </main>
+        {/* Contact — #contact, parallax + EmailJS form */}
+        <ScrollReveal delay={0.05}>
+          <Contact />
+        </ScrollReveal>
+      </main>
 
-          <Footer />
-        </div>
-      )}
+      <Footer />
     </>
   )
 }
