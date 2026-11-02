@@ -37,7 +37,7 @@ export default function About() {
             {/* Profile image */}
             <img
               src={profileImg}
-              alt="Shrilali M N Gowda — illustrated portrait"
+              alt="Shrilali M N Gowda — Full Stack Intern, TAP Academy student"
               className="w-full rounded-2xl object-cover shadow-2xl relative z-10"
             />
 
