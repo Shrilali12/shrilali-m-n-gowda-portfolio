@@ -23,6 +23,9 @@ import Leadership     from './components/Leadership'       // activities timelin
 import SoftSkills     from './components/SoftSkills'       // white cards
 import Contact        from './components/Contact'          // #contact
 
+// ── Fluid cursor effect ───────────────────────────────────────
+import SplashCursor   from './components/SplashCursor'
+
 // ── Scroll-reveal wrapper ─────────────────────────────────────
 import ScrollReveal   from './components/ScrollReveal'
 
@@ -38,6 +41,15 @@ export default function App() {
 
   return (
     <>
+      {/* SplashCursor — WebGL fluid trail, pointer-events: none so links stay clickable */}
+      <SplashCursor
+        VELOCITY_DISSIPATION={3}
+        SPLAT_FORCE={3500}
+        COLOR_UPDATE_SPEED={18}
+        COLOR="#ffffff"
+        RAINBOW_MODE={false}
+      />
+
       {/*
         Preloader sits at z-[100000] fixed — overlays the whole page.
         It fades/slides out after ~2.2 s on its own.
